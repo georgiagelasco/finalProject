@@ -7,8 +7,9 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+      /* Common styles */
       body {
-        background-color: #ADD8E6;
+        background-color: #ADD8E6; /* Soothing light blue */
         font-family: 'Roboto', sans-serif;
         color: #333;
         text-align: center;
@@ -22,85 +23,75 @@
         color: #222;
       }
 
-      svg {
-        width: 90%;
-        height: auto;
-        display: block; /* Display all charts */
-        margin: auto;
+      /* Buttons styling */
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        background-color: #007BFF;
+        color: white;
+        font-size: 1em;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s;
       }
 
-      select {
-        padding: 5px;
-        font-size: 1em;
-        margin-bottom: 20px;
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      button.active-button {
+        background-color: #4CAF50; /* Green */
+        color: white;
+      }
+
+      /* Chart container styles */
+      .chart-container {
+        margin: 20px auto;
+        text-align: center;
+        width: 90%;
+      }
+
+      svg {
+        width: 100%;
+        height: 400px; /* Set a uniform height for all charts */
+        border: 1px solid #ccc; /* Optional: Visualize the chart boundaries */
       }
     </style>
   </head>
   <body>
     <h1>Covid-19 Data Visualization</h1>
 
-    <!-- Dropdown for filtering -->
+    <!-- Buttons for user interaction -->
+    <div>
+      <button onclick="updatePieChart('sex')" aria-label="Update Pie Chart">Update Pie Chart</button>
+      <button onclick="updateBarChart('age_group')" aria-label="Update Bar Chart">Update Bar Chart</button>
+      <button onclick="drawHeatmap()" aria-label="Update Heatmap">Update Heatmap</button>
+    </div>
+
+    <!-- Dropdown for selecting data attributes -->
     <div id="dropdown-container">
       <label for="chart-dropdown">Choose an attribute: </label>
       <select id="chart-dropdown" onchange="updateDropdownSelection()"></select>
     </div>
 
-    <!-- Chart containers -->
-    <svg id="piechart"></svg>
-    <svg id="barchart"></svg>
-    <svg id="heatmap"></svg>
+    <!-- Separate containers for each chart -->
+    <div class="chart-container" id="piechart-container">
+      <h2>Pie Chart</h2>
+      <svg id="piechart"></svg>
+    </div>
 
-    <script>
-      function populateDropdown() {
-        const dropdown = document.getElementById("chart-dropdown");
+    <div class="chart-container" id="barchart-container">
+      <h2>Bar Chart</h2>
+      <svg id="barchart"></svg>
+    </div>
 
-        if (!dropdown.options.length) {
-          const attributes = [
-            "sex",
-            "age_group",
-            "race_ethnicity_combined",
-            "hosp_yn",
-            "icu_yn",
-            "death_yn",
-            "medcond_yn"
-          ];
+    <div class="chart-container" id="heatmap-container">
+      <h2>Heatmap</h2>
+      <svg id="heatmap"></svg>
+    </div>
 
-          dropdown.innerHTML = "";
-          attributes.forEach(attr => {
-            const option = document.createElement("option");
-            option.value = attr;
-            option.textContent = attr.charAt(0).toUpperCase() + attr.slice(1).replace(/_/g, " ");
-            dropdown.appendChild(option);
-          });
-
-          dropdown.value = attributes[0];
-        }
-      }
-
-      function updateDropdownSelection() {
-        const dropdown = document.getElementById("chart-dropdown");
-        const selectedValue = dropdown.value;
-
-        updatePieChart(selectedValue);
-        updateBarChart(selectedValue);
-      }
-
-      function loadScript(src, callback) {
-        if (!document.querySelector(`script[src="${src}"]`)) {
-          let script = document.createElement('script');
-          script.src = src;
-          script.onload = callback;
-          document.body.appendChild(script);
-        } else if (callback) {
-          callback();
-        }
-      }
-
-      loadScript("script.js", () => {
-        populateDropdown();
-        initializeCharts();
-      });
-    </script>
+    <!-- JavaScript -->
     <script src="script.js"></script>
   </body>
 </html>
